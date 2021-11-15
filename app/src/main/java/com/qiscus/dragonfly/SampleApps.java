@@ -18,6 +18,8 @@ package com.qiscus.dragonfly;
 
 import android.app.Application;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.facebook.stetho.Stetho;
 import com.qiscus.sdk.Qiscus;
 
@@ -27,12 +29,13 @@ import com.qiscus.sdk.Qiscus;
  * Name       : Zetra
  * GitHub     : https://github.com/zetbaitsu
  */
-public class SampleApps extends Application {
+public class SampleApps extends MultiDexApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Qiscus.init(this, "dragongo");
+//        Qiscus.init(this, "sdksample");
+        Qiscus.initWithCustomServer(this, "velox-tes-je23eirfrpd", "https://gochat.garudax.com","wss://mqtt.garudax.com:1886");
         Qiscus.setEnableLog(BuildConfig.DEBUG);
         Stetho.initializeWithDefaults(this);
     }

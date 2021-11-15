@@ -15,9 +15,9 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.dcendents.android-maven'
-apply from: rootProject.file('gradle/quality.gradle')
+//apply from: rootProject.file('gradle/quality.gradle')
 
 def versionMajor = 2
 def versionMinor = 27
@@ -47,17 +47,17 @@ ext {
     allLicenses = ["Apache-2.0"]
 
     //library version
-    androidSupportLibVersion = "27.1.1"
+    androidSupportLibVersion = "28.0.0"
     playServicesLibVersion = "12.0.1"
     okhttpLibVersion = '3.9.1'
     retrofitLibVersion = '2.3.0'
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 30
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 30
         versionCode 1
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
@@ -110,13 +110,13 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
     //Android Support Libraries
-    api "com.android.support:support-v4:${androidSupportLibVersion}"
-    api "com.android.support:appcompat-v7:${androidSupportLibVersion}"
-    api "com.android.support:recyclerview-v7:${androidSupportLibVersion}"
-    api "com.android.support:design:${androidSupportLibVersion}"
-    api "com.android.support:cardview-v7:${androidSupportLibVersion}"
-    api "com.android.support:customtabs:${androidSupportLibVersion}"
-    api "com.android.support:support-v13:${androidSupportLibVersion}"
+    api 'androidx.legacy:legacy-support-v4:1.0.0'
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.recyclerview:recyclerview:1.0.0'
+    api 'com.google.android.material:material:1.0.0'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'androidx.browser:browser:1.0.0'
+    api 'androidx.legacy:legacy-support-v13:1.0.0'
 
 
     //The core of Reactive Programming
@@ -152,7 +152,7 @@ dependencies {
     api 'com.google.android:flexbox:0.3.1'
 
     //File picker
-    api 'com.qiscus.utils:jupuk:1.1.0'
+    api 'com.qiscus.utils:jupuk:1.5.0'
 
     //Place picker
     implementation "com.github.devfutech:pingplacepicker:32cf4d181a"

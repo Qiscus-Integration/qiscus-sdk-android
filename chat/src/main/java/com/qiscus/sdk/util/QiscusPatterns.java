@@ -16,7 +16,7 @@
 
 package com.qiscus.sdk.util;
 
-import android.support.annotation.RestrictTo;
+import androidx.annotation.RestrictTo;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -18,7 +18,7 @@ package com.qiscus.sdk.data.local;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.RestrictTo;
+import androidx.annotation.RestrictTo;
 
 import com.qiscus.sdk.Qiscus;
 

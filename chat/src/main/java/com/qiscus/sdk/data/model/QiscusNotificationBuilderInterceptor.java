@@ -16,7 +16,7 @@
 
 package com.qiscus.sdk.data.model;
 
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 /**
  * Created on : March 24, 2017

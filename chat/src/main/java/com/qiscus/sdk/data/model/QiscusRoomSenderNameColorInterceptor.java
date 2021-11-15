@@ -1,6 +1,6 @@
 package com.qiscus.sdk.data.model;
 
-import android.support.annotation.ColorRes;
+import androidx.annotation.ColorRes;
 
 /**
  * @author yuana <andhikayuana@gmail.com>

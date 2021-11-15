@@ -18,7 +18,7 @@ package com.qiscus.dragonfly;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
             mLoginButton.setText("Login");
         } else {
             showLoading();
-            Qiscus.setUser("zetra25@gmail.com", "12345678")
-                    .withUsername("Zetra")
+            Qiscus.setUser("goldman@yopmail.com", "12345678")
+                    .withUsername("goldman")
                     .save()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openChat(View view) {
         showLoading();
-        Qiscus.buildChatWith("rya.meyvriska24@gmail.com")
+        Qiscus.buildChatWith("redman@yopmail.com")
                 .build(this)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

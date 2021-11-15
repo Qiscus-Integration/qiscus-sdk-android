@@ -16,7 +16,7 @@
 
 package com.qiscus.sdk.util;
 
-import android.support.annotation.RestrictTo;
+import androidx.annotation.RestrictTo;
 
 import com.qiscus.sdk.data.model.QiscusComment;
 

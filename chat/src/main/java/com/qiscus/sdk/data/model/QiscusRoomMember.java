@@ -18,7 +18,7 @@ package com.qiscus.sdk.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.qiscus.manggil.mention.Mentionable;
 
