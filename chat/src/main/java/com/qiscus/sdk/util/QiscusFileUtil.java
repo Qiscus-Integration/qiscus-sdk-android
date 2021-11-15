@@ -16,6 +16,8 @@
 
 package com.qiscus.sdk.util;
 
+import static com.qiscus.sdk.util.QiscusImageUtil.isImage;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -157,7 +159,39 @@ public final class QiscusFileUtil {
 
     public static String generateFilePath(String fileName, String extension) {
         File file = new File(Environment.getExternalStorageDirectory().getPath(),
-                QiscusImageUtil.isImage(fileName) ? QiscusImageUtil.IMAGE_PATH : FILES_PATH);
+                isImage(fileName) ? QiscusImageUtil.IMAGE_PATH : FILES_PATH);
+
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        int index = 0;
+        String directory = file.getAbsolutePath() + File.separator;
+        String[] fileNameSplit = splitFileName(fileName);
+        while (true) {
+            File newFile;
+            if (index == 0) {
+                newFile = new File(directory + fileNameSplit[0] + extension);
+            } else {
+                newFile = new File(directory + fileNameSplit[0] + "-" + index + extension);
+            }
+            if (!newFile.exists()) {
+                return newFile.getAbsolutePath();
+            }
+            index++;
+        }
+    }
+
+    /**
+     * Generate file path for target SDK API >= 30
+     * @param fileName
+     * @param extension
+     * @param environment
+     * @return path for file
+     */
+    public static String generateFilePath(String fileName, String extension, String environment) {
+        File file = new File(Qiscus.getApps().getExternalFilesDir(environment),
+                isImage(fileName) ? QiscusImageUtil.IMAGE_PATH : FILES_PATH);
 
         if (!file.exists()) {
             file.mkdirs();

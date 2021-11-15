@@ -29,6 +29,7 @@ import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
@@ -159,7 +160,13 @@ public final class QiscusImageUtil {
     public static File compressImage(File imageFile) {
 
         FileOutputStream out = null;
-        String filename = QiscusFileUtil.generateFilePath(imageFile.getName(), ".jpg");
+        String filename = "";
+        int androidVersion = Build.VERSION.SDK_INT;
+        if (androidVersion >= 30) {
+            filename =  QiscusFileUtil.generateFilePath(imageFile.getName(), ".jpg", Environment.DIRECTORY_PICTURES);
+        } else {
+            filename = QiscusFileUtil.generateFilePath(imageFile.getName(), ".jpg");
+        }
         try {
             out = new FileOutputStream(filename);
 
@@ -257,12 +264,25 @@ public final class QiscusImageUtil {
     }
 
     public static File createImageFile() throws IOException {
+        int androidVersion = Build.VERSION.SDK_INT;
         String timeStamp = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(new Date());
         String imageFileName = "JPEG-" + timeStamp + "-";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        QiscusCacheManager.getInstance().cacheLastImagePath("file:" + image.getAbsolutePath());
-        return image;
+        if (androidVersion >= 29) {
+            File storageDir = Qiscus.getApps().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+
+            QiscusCacheManager.getInstance().cacheLastImagePath("file:" + image.getAbsolutePath());
+            return image;
+        } else {
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+            QiscusCacheManager.getInstance().cacheLastImagePath("file:" + image.getAbsolutePath());
+            return image;
+        }
     }
 
     public static Bitmap getCircularBitmap(Bitmap bm) {
