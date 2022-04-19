@@ -16,6 +16,8 @@
 
 package com.qiscus.sdk.util;
 
+import static com.qiscus.sdk.util.BuildVersionUtil.isNougatOrHigher;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -26,6 +28,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
+import android.os.Build;
+import android.text.TextUtils;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -33,7 +39,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
-import android.text.TextUtils;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -47,7 +52,8 @@ import com.qiscus.sdk.data.model.QiscusMentionConfig;
 import com.qiscus.sdk.data.model.QiscusPushNotificationMessage;
 import com.qiscus.sdk.data.model.QiscusRoomMember;
 import com.qiscus.sdk.data.remote.QiscusApi;
-import com.qiscus.sdk.service.QiscusPushNotificationClickReceiver;
+import com.qiscus.sdk.ui.QiscusChatActivity;
+import com.qiscus.sdk.ui.QiscusGroupChatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,8 +66,6 @@ import java.util.Map;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
-import static com.qiscus.sdk.util.BuildVersionUtil.isNougatOrHigher;
 
 /**
  * Created on : June 15, 2017
@@ -252,6 +256,28 @@ public final class QiscusPushNotificationUtil {
     private static void pushNotification(Context context, QiscusComment comment,
                                          QiscusPushNotificationMessage pushNotificationMessage, Bitmap largeIcon) {
 
+        QiscusChatRoom room = Qiscus.getDataStore().getChatRoom(comment.getRoomId());
+        if (room == null) {
+            addRoomToLocal(context, comment, pushNotificationMessage, largeIcon);
+        } else {
+            buildNotification(context, room, comment, pushNotificationMessage, largeIcon);
+        }
+    }
+
+    private static void addRoomToLocal(Context context, QiscusComment comment, QiscusPushNotificationMessage pushNotificationMessage, Bitmap largeIcon) {
+        QiscusApi.getInstance()
+                .getChatRoom(comment.getRoomId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(qiscusChatRoom -> {
+                    buildNotification(context, qiscusChatRoom, comment, pushNotificationMessage, largeIcon);
+                }, throwable -> {
+                    QiscusErrorLogger.print("NotificationClick", throwable);
+                    Toast.makeText(context, QiscusErrorLogger.getMessage(throwable), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private static void buildNotification(Context context, QiscusChatRoom room, QiscusComment comment, QiscusPushNotificationMessage pushNotificationMessage, Bitmap largeIcon) {
         String notificationChannelId = Qiscus.getApps().getPackageName() + ".qiscus.sdk.notification.channel";
         if (BuildVersionUtil.isOreoOrHigher()) {
             NotificationChannel notificationChannel =
@@ -262,11 +288,25 @@ public final class QiscusPushNotificationUtil {
             }
         }
 
-        PendingIntent pendingIntent;
-        Intent openIntent = new Intent(context, QiscusPushNotificationClickReceiver.class);
+        Intent openIntent;
+
+        if (comment.isGroupMessage()) {
+            openIntent = QiscusGroupChatActivity.generateIntentFromPushNotif(context, room);
+        } else {
+            openIntent = QiscusChatActivity.generateIntentFromPushNotif(context, room);
+        }
+        openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         openIntent.putExtra("data", comment);
-        pendingIntent = PendingIntent.getBroadcast(context, QiscusNumberUtil.convertToInt(comment.getRoomId()),
-                openIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(context, QiscusNumberUtil.convertToInt(comment.getRoomId()),
+                    openIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+        } else {
+            pendingIntent = PendingIntent.getActivity(context, QiscusNumberUtil.convertToInt(comment.getRoomId()),
+                    openIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, notificationChannelId);
         notificationBuilder.setContentTitle(pushNotificationMessage.getRoomName())

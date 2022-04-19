@@ -54,10 +54,10 @@ ext {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 1
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
@@ -135,7 +135,7 @@ dependencies {
     api 'com.schinizer:rxunfurl:0.2.0'
 
     //Mqtt
-    api "com.qiscus.mqtt:android:1.1.2"
+    api "com.qiscus.mqtt:android:1.1.6"
 
     //Push notification
     api "com.google.firebase:firebase-core:19.0.0"

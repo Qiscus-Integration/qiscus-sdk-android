@@ -971,7 +971,7 @@ public class Qiscus {
                     .doOnNext(qiscusChatRoom -> Qiscus.getDataStore().addOrUpdate(qiscusChatRoom))
                     .map(qiscusChatRoom ->
                             QiscusChatActivity.generateIntent(context, qiscusChatRoom, message,
-                                    shareFiles, autoSendExtra, comments, scrollToComment));
+                                    shareFiles, autoSendExtra, comments, scrollToComment,false));
         }
     }
 

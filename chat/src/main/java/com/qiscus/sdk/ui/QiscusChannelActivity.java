@@ -53,12 +53,12 @@ public class QiscusChannelActivity extends QiscusGroupChatActivity {
 
         if (!qiscusChatRoom.isGroup()) {
             return QiscusChatActivity.generateIntent(context, qiscusChatRoom, startingMessage,
-                    shareFiles, autoSendExtra, comments, scrollToComment);
+                    shareFiles, autoSendExtra, comments, scrollToComment,false);
         }
 
         if (!qiscusChatRoom.isChannel()) {
             return QiscusGroupChatActivity.generateIntent(context, qiscusChatRoom, startingMessage,
-                    shareFiles, autoSendExtra, comments, scrollToComment);
+                    shareFiles, autoSendExtra, comments, scrollToComment,false);
         }
 
         Intent intent = new Intent(context, QiscusChannelActivity.class);

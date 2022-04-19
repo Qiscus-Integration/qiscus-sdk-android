@@ -48,16 +48,22 @@ public class QiscusGroupChatActivity extends QiscusChatActivity {
 
     public static Intent generateIntent(Context context, QiscusChatRoom qiscusChatRoom) {
         return generateIntent(context, qiscusChatRoom, null, null,
-                false, null, null);
+                false, null, null,false);
+    }
+
+    public static Intent generateIntentFromPushNotif(Context context, QiscusChatRoom qiscusChatRoom) {
+        return generateIntent(context, qiscusChatRoom, null, null,
+                false, null, null,true);
     }
 
     public static Intent generateIntent(Context context, QiscusChatRoom qiscusChatRoom,
                                         String startingMessage, List<File> shareFiles,
                                         boolean autoSendExtra, List<QiscusComment> comments,
-                                        QiscusComment scrollToComment) {
+                                        QiscusComment scrollToComment,
+                                        boolean isFromPushNoif) {
         if (!qiscusChatRoom.isGroup()) {
             return QiscusChatActivity.generateIntent(context, qiscusChatRoom, startingMessage,
-                    shareFiles, autoSendExtra, comments, scrollToComment);
+                    shareFiles, autoSendExtra, comments, scrollToComment,isFromPushNoif);
         }
 
         if (qiscusChatRoom.isChannel()) {
@@ -72,6 +78,7 @@ public class QiscusGroupChatActivity extends QiscusChatActivity {
         intent.putExtra(EXTRA_AUTO_SEND, autoSendExtra);
         intent.putParcelableArrayListExtra(EXTRA_FORWARD_COMMENTS, (ArrayList<QiscusComment>) comments);
         intent.putExtra(EXTRA_SCROLL_TO_COMMENT, scrollToComment);
+        intent.putExtra(EXTRA_CLICK_PUSH_NOTIFICATION, isFromPushNoif);
         return intent;
     }
 

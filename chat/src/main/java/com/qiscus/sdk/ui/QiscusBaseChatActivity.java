@@ -71,6 +71,7 @@ public abstract class QiscusBaseChatActivity extends RxAppCompatActivity impleme
     protected static final String EXTRA_AUTO_SEND = "auto_send";
     protected static final String EXTRA_FORWARD_COMMENTS = "extra_forward_comments";
     protected static final String EXTRA_SCROLL_TO_COMMENT = "extra_scroll_to_comment";
+    protected static final String EXTRA_CLICK_PUSH_NOTIFICATION = "extra_click_push_notification";
 
     protected QiscusChatConfig chatConfig;
     protected QiscusChatRoom qiscusChatRoom;
@@ -122,6 +123,7 @@ public abstract class QiscusBaseChatActivity extends RxAppCompatActivity impleme
         resolveAutoSendExtra();
         resolveForwardComments();
         resolveScrollToComment();
+        handleClickPushNotification();
 
         binRoomData();
 
@@ -131,6 +133,14 @@ public abstract class QiscusBaseChatActivity extends RxAppCompatActivity impleme
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, onCreateChatFragment(), QiscusBaseChatFragment.class.getName())
                     .commit();
+        }
+    }
+
+    private void handleClickPushNotification() {
+        if (getIntent().hasExtra(EXTRA_CLICK_PUSH_NOTIFICATION) && getIntent().getBooleanExtra(EXTRA_CLICK_PUSH_NOTIFICATION,false)) {
+            QiscusComment comment = getIntent().getParcelableExtra("data");
+            Qiscus.getChatConfig().getNotificationClickListener().onClick(this, comment);
+            getIntent().removeExtra(EXTRA_CLICK_PUSH_NOTIFICATION);
         }
     }
 
