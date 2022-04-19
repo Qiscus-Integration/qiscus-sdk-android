@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mVersion = findViewById(R.id.tv_version);
         mLoginButton.setText(Qiscus.hasSetupUser() ? "Logout" : "Login");
 
-        String versionSDK = getString(R.string.qiscus_version) + " " + BuildConfig.VERSION_NAME;
+        String versionSDK = getString(R.string.qiscus_version) + " " + "2.27.0";
         mVersion.setText(versionSDK);
     }
 

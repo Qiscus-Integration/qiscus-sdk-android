@@ -121,7 +121,7 @@ public enum QiscusApi {
                 .addHeader("QISCUS_SDK_APP_ID", Qiscus.getAppId())
                 .addHeader("QISCUS_SDK_TOKEN", Qiscus.hasSetupUser() ? Qiscus.getToken() : "")
                 .addHeader("QISCUS_SDK_USER_EMAIL", Qiscus.hasSetupUser() ? Qiscus.getQiscusAccount().getEmail() : "")
-                .addHeader("QISCUS_SDK_VERSION", "ANDROID_" + BuildConfig.VERSION_NAME)
+                .addHeader("QISCUS_SDK_VERSION", "ANDROID_2.27.0")
                 .addHeader("QISCUS_SDK_PLATFORM", "ANDROID")
                 .addHeader("QISCUS_SDK_DEVICE_BRAND", Build.MANUFACTURER)
                 .addHeader("QISCUS_SDK_DEVICE_MODEL", Build.MODEL)
